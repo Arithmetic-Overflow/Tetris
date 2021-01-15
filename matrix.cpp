@@ -37,16 +37,21 @@ Matrix::Matrix(int x, int y, int w, int h) {
         this->matrix[i][0] = 2;
     }
 
-    std::cout << this->width << std::endl;
-    std::cout << this->height << std::endl;
-    std::cout << this->cellW << std::endl;
-    std::cout << this->cellH << std::endl;
+    // std::cout << this->width << std::endl;
+    // std::cout << this->height << std::endl;
+    // std::cout << this->cellW << std::endl;
+    // std::cout << this->cellH << std::endl;
 }
 
 Matrix::~Matrix() {
-//    for(int i = 0; i < MATRIXHEIGH; i++) {
-//         free(this->matrix[i]);
-//     }
+    std::cout << "?M" << std::endl;
+
+   for(int i = 0; i < MATRIXHEIGHT; i++) {
+        // std::cout << this->matrix[i] << std::endl;
+        free(this->matrix[i]);
+    }
+
+    free(this->matrix);
 }
 
 int Matrix::getWidth() {
@@ -82,12 +87,7 @@ void Matrix::drawPiece(sf::RenderWindow &window, Piece &piece) {
     int pieceX = piece.getX();
     int pieceY = piece.getY();
 
-    int **pieceCells = (int **) malloc(sizeof(int *) * DIM);
-    for(int i = 0; i < DIM; i++) {
-        pieceCells[i] = (int *) malloc(sizeof(int) * DIM);
-    }
-
-    pieceCells = piece.getCells();
+    int **pieceCells = piece.getCells();
 
     for(int i = 0; i < DIM; i++) {
         for(int j = 0; j < DIM; j++) {

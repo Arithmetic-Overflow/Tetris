@@ -1,5 +1,7 @@
 #include "piece.hpp"
 
+#include <iostream>
+
 Piece::Piece(pieceShape shape) {
     this->shape = shape;
 
@@ -20,9 +22,13 @@ Piece::Piece(pieceShape shape) {
 }
 
 Piece::~Piece() {
+    std::cout << "?P" << std::endl;
+
     for(int i = 0; i < DIM; i++) {
         free(this->cells[i]);
     }
+
+    free(this->cells);
 }
 
 int Piece::getX() {

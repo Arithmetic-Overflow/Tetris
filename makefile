@@ -1,5 +1,5 @@
 CPP = g++
-FLAGS = -Wall -Werror
+FLAGS = -Wall -Werror -g
 OBJ = main.o tetris.o matrix.o piece.o
 PROGRAMNAME = tetris
 
