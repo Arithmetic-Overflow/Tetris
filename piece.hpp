@@ -1,18 +1,27 @@
 #ifndef PIECEHPP
 #define PIECEHPP
 
-#include "piecedata.hpp"
+#include "gameinfo.hpp"
+
+#define ROTCENTRE {2, 2}
 
 class Piece {
     private:
         pieceShape shape;
         int xPos;
         int yPos;
+        int **cells;
+        int rotation;
 
     public:
         Piece(pieceShape);
+        ~Piece();
 
         pieceShape getShape();
+        int **getCells();
+
+        int getX();
+        int getY();
 
         void move(int);
         void rotate(int);
@@ -22,6 +31,8 @@ class Piece {
 
         // Should only be used to display the next piece
         void setPos(int, int);
+
+        Piece copy();
 };
 
 #endif

@@ -2,7 +2,7 @@
 
 #include "gameinfo.hpp"
 
-#include <iostream>
+// #include <iostream>
 #include <math.h>
 
 #define FPSCAP 72
@@ -25,11 +25,11 @@ int tetris() {
 
     matrixShape.setFillColor(sf::Color::Transparent);
     matrixShape.setOutlineColor(sf::Color(250, 250, 250));
-    matrixShape.setOutlineThickness(3.0f);
+    matrixShape.setOutlineThickness(1.0f);
 
     sf::Font font;
     if (!font.loadFromFile("/usr/share/fonts/truetype/quicksand/Quicksand-Regular.ttf")) {
-        std::cout << "font failed to load" << std::endl;
+        // std::cout << "font failed to load" << std::endl;
     }
 
     sf::Text frameCountText;
@@ -42,11 +42,15 @@ int tetris() {
     sf::Clock clock;
     float dt = 0.0f;
 
+    Matrix matrix((windowWidth - matrixWidth)/2, (windowHeight - matrixHeight)/2, matrixWidth, matrixHeight);
+    Piece piece((pieceShape) 1);
+
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
                 window.close();
+            }
         }
 
         dt += clock.restart().asSeconds();
@@ -63,9 +67,10 @@ int tetris() {
         }
 
         window.clear();
-        window.draw(matrixShape);
+        // window.draw(matrixShape);
         frameCountText.setString(std::to_string(dropCounter));
         window.draw(frameCountText);
+        matrix.draw(window, piece);
         window.display();
     }
 

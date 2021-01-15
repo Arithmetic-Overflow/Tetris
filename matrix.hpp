@@ -2,21 +2,33 @@
 #define MATRIXHPP
 
 #include "piece.hpp"
-// #include "colorkey.hpp"
 
 class Matrix {
     private:
+        // coordinates of the top left corner 
+        int x;
+        int y;
+
+        // dimensions of the matrix (board)
         int width;
         int height;
 
+        // width and height of a single cell
+        int cellW;
+        int cellH;
+
+        // contains the values of every cell
+        // 0 for empty, a positive int if filled
         int **matrix;
 
-        void drawCell(int, int, int);
-
-        void drawPiece(Piece);
+        void drawCell(sf::RenderWindow&, int, int, int);
+        void drawPiece(sf::RenderWindow&, Piece&);
+        void drawOutline(sf::RenderWindow&);
+        void drawMatrix(sf::RenderWindow&);
 
     public:
         Matrix(int, int, int, int);
+        ~Matrix();
 
         int getWidth();
         int getHeight();
@@ -28,7 +40,7 @@ class Matrix {
         int dropPiece(Piece);
         int rotatePiece(Piece, int);
 
-        void draw();
+        void draw(sf::RenderWindow&, Piece&);
 };
 
 #endif
