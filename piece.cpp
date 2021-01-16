@@ -11,6 +11,8 @@ Piece::Piece(pieceShape shape) {
     this->yPos = (shape == P_I) ?
                     MATRIXHEIGHT  + 0 :
                     MATRIXHEIGHT  + 1;
+
+    // this->yPos -= 3;
     
     // Initial rotation of 0
     this->rotation = 0;
@@ -45,7 +47,7 @@ void Piece::move(int movedir) {
     this->xPos += movedir;
 }
 
-void Piece::fall() {
+void Piece::drop() {
     this->yPos--;
 }
 

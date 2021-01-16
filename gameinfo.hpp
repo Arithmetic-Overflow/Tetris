@@ -10,7 +10,4 @@
 
     #define HEIGHTWIDTHRATIO (float) MATRIXWIDTH/ (float) MATRIXHEIGHT
 
-    #define SPAWNX MATRIXWIDTH/2 - DIM/2
-    #define SPAWNY -5
-
 #endif

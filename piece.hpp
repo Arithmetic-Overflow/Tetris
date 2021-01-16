@@ -24,7 +24,7 @@ class Piece {
         int getY();
 
         void move(int);
-        void fall();
+        void drop();
         void rotate(int);
 
         void nextTranslation(int&, int&);

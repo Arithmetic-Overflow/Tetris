@@ -65,15 +65,39 @@ int Matrix::clearRows() {
     return 0;
 }
 
-int Matrix::movePiece(Piece, int) {
+int Matrix::movePiece(Piece&, int) {
     return 0;
 }
 
-int Matrix::dropPiece(Piece) {
-    return 0;
+int Matrix::dropPiece(Piece& piece) {
+    int pieceX = piece.getX();
+    int pieceY = piece.getY();
+
+    bool validDrop = true;
+
+    for(int i = 0; i < DIM; i++) {
+        for(int j = 0; j < DIM; j++) {
+            int cellY = pieceY - i;
+            int cellX = pieceX + j;
+
+            int nextY = cellY - 1;
+
+            int **pieceCells = piece.getCells();
+            if(pieceCells[i][j] != 0) {
+                validDrop = validDrop && this->isFreeCell(cellX, nextY);
+            }
+        }
+    }
+
+    if(validDrop) {
+        piece.drop();
+        return 0;
+    }
+
+    return 1;
 }
 
-int Matrix::rotatePiece(Piece, int) {
+int Matrix::rotatePiece(Piece&, int) {
     return 0;
 }
 
@@ -81,6 +105,18 @@ bool Matrix::isValidCell(int cellX, int cellY) {
     return (
         cellX >= 0 && cellX < MATRIXWIDTH &&
         cellY >= 0 && cellY < MATRIXHEIGHT
+    );
+}
+
+bool Matrix::isFreeCell(int cellX, int cellY) {
+    if(this->isValidCell(cellX, cellY)) {
+        return (this->matrix[cellY][cellX] == 0);
+    }
+
+    return (
+        cellY >= 0 &&
+        cellX >= 0 &&
+        cellX < MATRIXWIDTH
     );
 }
 
@@ -94,6 +130,7 @@ void Matrix::drawPiece(sf::RenderWindow &window, Piece &piece) {
         for(int j = 0; j < DIM; j++) {
             int cellY = pieceY - i;
             int cellX = pieceX + j;
+
             if(this->isValidCell(cellX, cellY)) {
                 this->drawCell(window, pieceY - i, pieceX + j, pieceCells[i][j]);
             }
@@ -101,10 +138,12 @@ void Matrix::drawPiece(sf::RenderWindow &window, Piece &piece) {
     }
 }
 
-void Matrix::drawCell(sf::RenderWindow &window, int i, int j, int c) {
-    if(c == 0) {
+void Matrix::drawCell(sf::RenderWindow &window, int i, int j, int colorValue) {
+    if(colorValue == 0) {
         return;
     }
+
+    colorValue--;
 
     int cellX = this->x + this->cellW * j;
     int cellY = this->y + this->cellH * (MATRIXHEIGHT - (i + 1));
@@ -114,8 +153,8 @@ void Matrix::drawCell(sf::RenderWindow &window, int i, int j, int c) {
 
     cell.setOutlineThickness(-CELLBORDER);
 
-    cell.setFillColor(colorkey[c][0]);
-    cell.setOutlineColor(colorkey[c][1]);
+    cell.setFillColor(colorkey[colorValue][0]);
+    cell.setOutlineColor(colorkey[colorValue][1]);
 
     window.draw(cell);
 }

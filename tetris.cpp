@@ -36,10 +36,11 @@ int tetris() {
     float dt = 0.0f;
 
     Matrix matrix((windowWidth - matrixWidth)/2, (windowHeight - matrixHeight)/2, matrixWidth, matrixHeight);
-    Piece piece((pieceShape) 1);
+    int pp = 6;
+    Piece piece((pieceShape) pp);
+
 
     while (window.isOpen()) {
-        std::cout << "TICK: " << TIMEPERFRAME << std::endl;
         sf::Event event;
         while (window.pollEvent(event)) {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
@@ -56,16 +57,15 @@ int tetris() {
             dt = std::fmod(dt, TIMEPERFRAME);
             frameCount++;
 
-            std::cout << "!" << std::endl;
-
             dropCounter = (dropCounter + 1) % framesToDrop;
             if(dropCounter == 0) {
-                piece.fall();
+                if(matrix.dropPiece(piece)) {
+                    // pp++;
+                    // pp%=NUMSHAPES;
+                    piece = Piece((pieceShape) pp);
+                }
             }
         }
-
-
-            
 
         window.clear();
         frameCountText.setString(std::to_string(dropCounter));

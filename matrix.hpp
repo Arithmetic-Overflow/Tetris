@@ -22,6 +22,7 @@ class Matrix {
         int **matrix;
 
         bool isValidCell(int, int);
+        bool isFreeCell(int, int);
 
         void drawCell(sf::RenderWindow&, int, int, int);
         void drawPiece(sf::RenderWindow&, Piece&);
@@ -38,9 +39,9 @@ class Matrix {
 
         int clearRows();
 
-        int movePiece(Piece, int);
-        int dropPiece(Piece);
-        int rotatePiece(Piece, int);
+        int movePiece(Piece&, int);
+        int dropPiece(Piece&);
+        int rotatePiece(Piece&, int);
 
         void draw(sf::RenderWindow&, Piece&);
 };
