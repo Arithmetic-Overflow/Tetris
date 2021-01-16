@@ -25,29 +25,29 @@ Matrix::Matrix(int x, int y, int w, int h) {
         }
     }
 
-    for(int i = 0; i < MATRIXWIDTH; i++) {
-        this->matrix[0][i] = 2;
-    }
+    // for(int i = 0; i < MATRIXWIDTH; i++) {
+    //     this->matrix[0][i] = 2;
+    // }
 
-    for(int i = 0; i < 15; i++) {
-        this->matrix[1][i] = 2;
-    }
+    // for(int i = 0; i < 15; i++) {
+    //     this->matrix[1][i] = 2;
+    // }
 
-    for(int i = 0; i < MATRIXHEIGHT; i++) {
-        this->matrix[i][0] = 2;
-    }
+    // for(int i = 0; i < MATRIXHEIGHT; i++) {
+    //     this->matrix[i][0] = 2;
+    // }
 
-    std::cout << this->width << std::endl;
-    std::cout << this->height << std::endl;
-    std::cout << this->cellW << std::endl;
-    std::cout << this->cellH << std::endl;
+    // std::cout << this->width << std::endl;
+    // std::cout << this->height << std::endl;
+    // std::cout << this->cellW << std::endl;
+    // std::cout << this->cellH << std::endl;
 }
 
-Matrix::~Matrix() {
+// Matrix::~Matrix() {
 //    for(int i = 0; i < MATRIXHEIGH; i++) {
 //         free(this->matrix[i]);
 //     }
-}
+// }
 
 int Matrix::getWidth() {
     return this->width;
@@ -77,22 +77,25 @@ int Matrix::rotatePiece(Piece, int) {
     return 0;
 }
 
+bool Matrix::isValidCell(int cellX, int cellY) {
+    return (
+        cellX >= 0 && cellX < MATRIXWIDTH &&
+        cellY >= 0 && cellY < MATRIXHEIGHT
+    );
+}
 
 void Matrix::drawPiece(sf::RenderWindow &window, Piece &piece) {
     int pieceX = piece.getX();
     int pieceY = piece.getY();
 
-    int **pieceCells = (int **) malloc(sizeof(int *) * DIM);
-    for(int i = 0; i < DIM; i++) {
-        pieceCells[i] = (int *) malloc(sizeof(int) * DIM);
-    }
-
-    pieceCells = piece.getCells();
+    int **pieceCells = piece.getCells();
 
     for(int i = 0; i < DIM; i++) {
         for(int j = 0; j < DIM; j++) {
-            if(i < MATRIXHEIGHT) {
-                this->drawCell(window, pieceX + i, pieceY + j, pieceCells[i][j]);
+            int cellY = pieceY - i;
+            int cellX = pieceX + j;
+            if(this->isValidCell(cellX, cellY)) {
+                this->drawCell(window, pieceY - i, pieceX + j, pieceCells[i][j]);
             }
         }
     }

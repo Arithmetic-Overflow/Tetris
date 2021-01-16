@@ -3,11 +3,19 @@
 Piece::Piece(pieceShape shape) {
     this->shape = shape;
 
-    this->xPos = (shape == P_I) ? MATRIXWIDTH/2 - 2 : MATRIXWIDTH/2 - 1;
-    this->yPos = (shape == P_I) ? MATRIXHEIGHT  + 3 : MATRIXHEIGHT  + 2;
+    // Spawning positions of the pieces
+    this->xPos = (shape == P_I || shape == P_O) ? 
+                    MATRIXWIDTH/2 - 2 :
+                    MATRIXWIDTH/2 - 2;
 
+    this->yPos = (shape == P_I) ?
+                    MATRIXHEIGHT  + 0 :
+                    MATRIXHEIGHT  + 1;
+    
+    // Initial rotation of 0
     this->rotation = 0;
 
+    // Load the shape of the piece into its cells
     this->cells = (int **) malloc(sizeof(int *) * DIM);
 
     for(int i = 0; i < DIM; i++) {
@@ -19,11 +27,11 @@ Piece::Piece(pieceShape shape) {
     }
 }
 
-Piece::~Piece() {
-    for(int i = 0; i < DIM; i++) {
-        free(this->cells[i]);
-    }
-}
+// Piece::~Piece() {
+//     for(int i = 0; i < DIM; i++) {
+//         free(this->cells[i]);
+//     }
+// }
 
 int Piece::getX() {
     return this->xPos;
@@ -37,7 +45,13 @@ void Piece::move(int movedir) {
     this->xPos += movedir;
 }
 
+void Piece::fall() {
+    this->yPos--;
+}
+
 void Piece::rotate(int rotdir) {
+    // Pieces rotate in 90 degree intervals therefore
+    // exactly 4 possiible rotations exist
     this->rotation = (this->rotation + rotdir) % 4;
 }
 
@@ -49,10 +63,8 @@ int **Piece::getCells() {
     return this->cells;
 }
 
-Piece Piece::nextTranslation(int movedir) {
-    return *this;
+void Piece::nextTranslation(int &nextX, int &nextY) {
 }
 
-Piece Piece::nextRotation(int rotdir) {
-    return *this;
+void Piece::nextRotation(int **&newCells) {
 }

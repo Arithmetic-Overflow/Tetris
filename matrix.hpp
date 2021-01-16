@@ -21,6 +21,8 @@ class Matrix {
         // 0 for empty, a positive int if filled
         int **matrix;
 
+        bool isValidCell(int, int);
+
         void drawCell(sf::RenderWindow&, int, int, int);
         void drawPiece(sf::RenderWindow&, Piece&);
         void drawOutline(sf::RenderWindow&);
@@ -28,7 +30,7 @@ class Matrix {
 
     public:
         Matrix(int, int, int, int);
-        ~Matrix();
+        // ~Matrix();
 
         int getWidth();
         int getHeight();

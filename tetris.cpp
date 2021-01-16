@@ -2,7 +2,7 @@
 
 #include "gameinfo.hpp"
 
-// #include <iostream>
+#include <iostream>
 #include <math.h>
 
 #define FPSCAP 72
@@ -20,16 +20,9 @@ int tetris() {
     const int matrixHeight = 8 * windowHeight / 10;
     const int matrixWidth = HEIGHTWIDTHRATIO * matrixHeight;
 
-    sf::RectangleShape matrixShape(sf::Vector2f(matrixWidth, matrixHeight));
-    matrixShape.move(sf::Vector2f((windowWidth - matrixWidth)/2, (windowHeight - matrixHeight)/2));
-
-    matrixShape.setFillColor(sf::Color::Transparent);
-    matrixShape.setOutlineColor(sf::Color(250, 250, 250));
-    matrixShape.setOutlineThickness(1.0f);
-
     sf::Font font;
     if (!font.loadFromFile("/usr/share/fonts/truetype/quicksand/Quicksand-Regular.ttf")) {
-        // std::cout << "font failed to load" << std::endl;
+        std::cout << "font failed to load" << std::endl;
     }
 
     sf::Text frameCountText;
@@ -46,6 +39,7 @@ int tetris() {
     Piece piece((pieceShape) 1);
 
     while (window.isOpen()) {
+        std::cout << "TICK: " << TIMEPERFRAME << std::endl;
         sf::Event event;
         while (window.pollEvent(event)) {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
@@ -58,16 +52,22 @@ int tetris() {
             continue;
         }
 
-        dt = std::fmod(dt, TIMEPERFRAME);
-        frameCount++;
-        dropCounter = (dropCounter + 1) % framesToDrop;
+        while(dt >= TIMEPERFRAME) {
+            dt = std::fmod(dt, TIMEPERFRAME);
+            frameCount++;
 
-        if(dropCounter == 0) {
-            
+            std::cout << "!" << std::endl;
+
+            dropCounter = (dropCounter + 1) % framesToDrop;
+            if(dropCounter == 0) {
+                piece.fall();
+            }
         }
 
+
+            
+
         window.clear();
-        // window.draw(matrixShape);
         frameCountText.setString(std::to_string(dropCounter));
         window.draw(frameCountText);
         matrix.draw(window, piece);

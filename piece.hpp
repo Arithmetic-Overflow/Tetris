@@ -15,7 +15,7 @@ class Piece {
 
     public:
         Piece(pieceShape);
-        ~Piece();
+        // ~Piece();
 
         pieceShape getShape();
         int **getCells();
@@ -24,10 +24,11 @@ class Piece {
         int getY();
 
         void move(int);
+        void fall();
         void rotate(int);
 
-        Piece nextTranslation(int);
-        Piece nextRotation(int);
+        void nextTranslation(int&, int&);
+        void nextRotation(int**&);
 
         // Should only be used to display the next piece
         void setPos(int, int);

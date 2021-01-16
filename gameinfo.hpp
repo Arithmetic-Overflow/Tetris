@@ -3,7 +3,7 @@
 
     #include "piecedata.hpp"
 
-    #define TIMEPERFRAME 1/60
+    #define TIMEPERFRAME 1.0f/60.0f
 
     #define MATRIXHEIGHT 20
     #define MATRIXWIDTH 10
