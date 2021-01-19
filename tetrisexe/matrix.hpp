@@ -17,12 +17,18 @@ class Matrix {
         int cellW;
         int cellH;
 
+        // borders storing graphical information
+        float cellBorder;
+        float matrixBorder;
+
         // contains the values of every cell
         // 0 for empty, a positive int if filled
         int **matrix;
 
         bool isValidCell(int, int);
         bool isFreeCell(int, int);
+
+        void moveDownRows(int);
 
         void embedPiece(Piece&);
 

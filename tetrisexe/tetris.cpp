@@ -5,14 +5,16 @@
 #include <iostream>
 #include <math.h>
 
-#define FPSCAP 72
+#define FPSCAP      72
 
-int tetris() {
-    const int windowWidth = sf::VideoMode::getDesktopMode().width   + 1;
+int tetris(int seed, int id) {
+    srand(seed);
+
+    const int windowWidth = sf::VideoMode::getDesktopMode().width / 2 + 1;
     const int windowHeight = sf::VideoMode::getDesktopMode().height + 1;
 
     sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Tetriis", sf::Style::None);
-    window.setPosition(sf::Vector2i(0,0));
+    window.setPosition(sf::Vector2i(windowWidth * id, 0));
 
     window.setFramerateLimit(FPSCAP);
 
@@ -41,9 +43,11 @@ int tetris() {
     float dt = 0.0f;
 
     Matrix matrix((windowWidth - matrixWidth)/2, (windowHeight - matrixHeight)/2, matrixWidth, matrixHeight);
-    int pp = 0;
-    Piece piece((pieceShape) pp);
 
+    int nextShape = rand()%NUMSHAPES;
+    Piece piece((pieceShape) nextShape);
+
+    nextShape = (pieceShape) rand()%NUMSHAPES;
 
     while (window.isOpen()) {
         sf::Event event;
@@ -80,9 +84,9 @@ int tetris() {
             dropCounter = (dropCounter + 1) % framesToDrop;
             if(dropCounter == 0) {
                 if(matrix.dropPiece(piece)) {
-                    pp++;
-                    pp%=NUMSHAPES;
-                    piece = Piece((pieceShape) pp);
+                    piece = Piece((pieceShape) nextShape);
+
+                    nextShape = rand()%NUMSHAPES;
                 }
             }
 

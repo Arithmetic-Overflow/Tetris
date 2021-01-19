@@ -14,6 +14,6 @@ class Tetris {
 
 };
 
-int tetris();
+int tetris(int, int);
 
 #endif

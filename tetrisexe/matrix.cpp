@@ -1,8 +1,9 @@
 #include "matrix.hpp"
+#include <math.h>
 #include <iostream>
 
-#define CELLBORDER 4.0f
-#define MATRIXBORDER 8.0f
+#define CELLBORDERSCALE      1.0f / 8.0f
+#define MATRIXBORDERSCALE    1.0f / 4.0f
 
 Matrix::Matrix(int x, int y, int w, int h) {
     this->x = x;
@@ -16,13 +17,15 @@ Matrix::Matrix(int x, int y, int w, int h) {
     this->width = this->cellW * MATRIXWIDTH;
     this->height = this->cellH * MATRIXHEIGHT;
 
+    // std::cout << this->cellW << " " << this->cellH << std::endl;
+
+    this->cellBorder = floor(cellW * CELLBORDERSCALE);
+    this->matrixBorder = floor(cellH * MATRIXBORDERSCALE);
+
+    // a 2 dimensional array
     this->matrix = (int **) malloc(sizeof(int *) * MATRIXHEIGHT);
     for(int i = 0; i < MATRIXHEIGHT; i++) {
-        this->matrix[i] = (int *) malloc(sizeof(int) * MATRIXWIDTH);
-
-        for(int j = 0; j < MATRIXWIDTH; j++) {
-            this->matrix[i][j] = 0;
-        }
+        this->matrix[i] = (int *) calloc(MATRIXWIDTH, sizeof(int));
     }
 }
 
@@ -44,7 +47,34 @@ int **Matrix::getMatrix() {
     return this->matrix;
 }
 
+// moves down the matrix to delete cleared rows
+void Matrix::moveDownRows(int clearedRow) {
+    for(int i = clearedRow; i < MATRIXHEIGHT - 1; i++) {
+        for(int j = 0; j < MATRIXWIDTH; j++) {
+            this->matrix[i][j] = this->matrix[i+1][j];
+        }
+    }
+}
+
+// clears full rows
+// is called whenever pieces embed onto the matrix
 int Matrix::clearRows() {
+    for(int i = 0; i < MATRIXHEIGHT; i++) {
+        bool fullRow = true;
+
+        for(int j = 0; j < MATRIXWIDTH; j++) {
+            if(this->matrix[i][j] == 0) {
+                fullRow = false;
+                break;
+            }
+        }
+
+        if(fullRow) {
+            this->moveDownRows(i);
+            i--;
+        }
+    }
+
     return 0;
 }
 
@@ -61,13 +91,19 @@ void Matrix::embedPiece(Piece& piece) {
             int cellY = pieceY - i;
             int cellX = pieceX + j;
 
-            // std::cout << cellX << " " << cellY << std::endl;
-
+            // set the cells the piece lands on to be filled
             if(this->isValidCell(cellX, cellY)) {
+                // if(this->matrix[cellY][cellX] == 0) {
+                //     this->matrix[cellY][cellX] = pieceCells[i][j];
+                // }
+
+                // either the matrix or pieceCells at that point should be 0
                 this->matrix[cellY][cellX] |= pieceCells[i][j];
             }
         }
     }
+
+    this->clearRows();
 }
 
 // attempts to move a piece
@@ -223,10 +259,10 @@ void Matrix::drawCell(sf::RenderWindow &window, int i, int j, int colorValue) {
     int cellX = this->x + this->cellW * j;
     int cellY = this->y + this->cellH * (MATRIXHEIGHT - (i + 1));
 
-    sf::RectangleShape cell(sf::Vector2f((float) this->cellW - 2*CELLBORDER, (float) this->cellH - 2*CELLBORDER));
+    sf::RectangleShape cell(sf::Vector2f((float) this->cellW - 2*this->cellBorder, (float) this->cellH - 2*this->cellBorder));
     cell.move(sf::Vector2f((float) cellX,(float) cellY));
 
-    cell.setOutlineThickness(-CELLBORDER);
+    cell.setOutlineThickness(-this->cellBorder);
 
     cell.setFillColor(colorkey[colorValue][0]);
     cell.setOutlineColor(colorkey[colorValue][1]);
@@ -236,10 +272,10 @@ void Matrix::drawCell(sf::RenderWindow &window, int i, int j, int colorValue) {
 
 // draws the bounding box for the matrix
 void Matrix::drawOutline(sf::RenderWindow &window) {
-    sf::RectangleShape outline(sf::Vector2f((float) this->width + 2*CELLBORDER, (float) this->height + 2*CELLBORDER));
-    outline.move(sf::Vector2f((float) this->x - 2*CELLBORDER, (float) this->y - 2*CELLBORDER));
+    sf::RectangleShape outline(sf::Vector2f((float) this->width + 2*this->cellBorder, (float) this->height + 2*this->cellBorder));
+    outline.move(sf::Vector2f((float) this->x - 2*this->cellBorder, (float) this->y - 2*this->cellBorder));
 
-    outline.setOutlineThickness(MATRIXBORDER);
+    outline.setOutlineThickness(this->matrixBorder);
 
     outline.setFillColor(sf::Color::Transparent);
     outline.setOutlineColor(sf::Color(250, 250, 250));
