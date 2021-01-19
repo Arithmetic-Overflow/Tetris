@@ -24,6 +24,8 @@ class Matrix {
         bool isValidCell(int, int);
         bool isFreeCell(int, int);
 
+        void embedPiece(Piece&);
+
         void drawCell(sf::RenderWindow&, int, int, int);
         void drawPiece(sf::RenderWindow&, Piece&);
         void drawOutline(sf::RenderWindow&);

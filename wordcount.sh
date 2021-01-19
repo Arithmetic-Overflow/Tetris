@@ -1,4 +1,4 @@
-#!/bin/bash
+# !/bin/bash
 
 total=0
 for i in *.cpp
@@ -17,3 +17,4 @@ nlines=$(wc -l < makefile)
 total=$((nlines+total))
 
 echo $total
+exit
