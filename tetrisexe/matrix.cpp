@@ -8,6 +8,7 @@
 Matrix::Matrix(int x, int y, int w, int h) {
     this->x = x;
     this->y = y;
+
     this->width = w;
     this->height = h;
 
@@ -17,12 +18,10 @@ Matrix::Matrix(int x, int y, int w, int h) {
     this->width = this->cellW * MATRIXWIDTH;
     this->height = this->cellH * MATRIXHEIGHT;
 
-    // std::cout << this->cellW << " " << this->cellH << std::endl;
-
     this->cellBorder = floor(cellW * CELLBORDERSCALE);
     this->matrixBorder = floor(cellH * MATRIXBORDERSCALE);
 
-    // a 2 dimensional array
+    // 2 dimensional array
     this->matrix = (int **) malloc(sizeof(int *) * MATRIXHEIGHT);
     for(int i = 0; i < MATRIXHEIGHT; i++) {
         this->matrix[i] = (int *) calloc(MATRIXWIDTH, sizeof(int));
@@ -35,6 +34,9 @@ Matrix::Matrix(int x, int y, int w, int h) {
 //     }
 // }
 
+
+// some functions just in case I will need them later
+// --------------------------------------------------------
 int Matrix::getWidth() {
     return this->width;
 }
@@ -46,6 +48,7 @@ int Matrix::getHeight() {
 int **Matrix::getMatrix() {
     return this->matrix;
 }
+// --------------------------------------------------------
 
 // moves down the matrix to delete cleared rows
 void Matrix::moveDownRows(int clearedRow) {
@@ -58,7 +61,10 @@ void Matrix::moveDownRows(int clearedRow) {
 
 // clears full rows
 // is called whenever pieces embed onto the matrix
+// returns the number of lines cleared
 int Matrix::clearRows() {
+    int linesCleared = 0;
+
     for(int i = 0; i < MATRIXHEIGHT; i++) {
         bool fullRow = true;
 
@@ -71,20 +77,26 @@ int Matrix::clearRows() {
 
         if(fullRow) {
             this->moveDownRows(i);
+            linesCleared++;
             i--;
         }
     }
 
-    return 0;
+    return linesCleared;
 }
 
 // when a piece lands its data gets copied onto the matrix
 // the cells will stay perpetually until removed
-void Matrix::embedPiece(Piece& piece) {
+// returns 0 if no lines were cleared
+// returns the number of lines cleared if any were cleared
+// returns -1 if the game is over
+int Matrix::embedPiece(Piece& piece) {
     int pieceX = piece.getX();
     int pieceY = piece.getY();
 
     int **pieceCells = piece.getCells();
+
+    bool gameover = false;
 
     for(int i = 0; i < DIM; i++) {
         for(int j = 0; j < DIM; j++) {
@@ -100,10 +112,18 @@ void Matrix::embedPiece(Piece& piece) {
                 // either the matrix or pieceCells at that point should be 0
                 this->matrix[cellY][cellX] |= pieceCells[i][j];
             }
+
+            else if(pieceCells[i][j] != 0) {
+                gameover = true;
+            }
         }
     }
+    
+    if(gameover) {
+        return -1;
+    }
 
-    this->clearRows();
+    return this->clearRows();
 }
 
 // attempts to move a piece
@@ -139,9 +159,9 @@ int Matrix::movePiece(Piece& piece, int movedir) {
 
 // attempt to drop a piece
 // if the piece has collided with something embed it in place
-// returns 1 if the piece has collided with something
-// returns 0 if it has successfully dropped
+// returns the number of lines cleared if it has successfully dropped
 // returns -1 if the drop results in game over
+// returns -2 if it has dropped but not cleared any lines
 int Matrix::dropPiece(Piece& piece) {
     int pieceX = piece.getX();
     int pieceY = piece.getY();
@@ -164,12 +184,10 @@ int Matrix::dropPiece(Piece& piece) {
 
     if(validDrop) {
         piece.drop();
-        return 0;
+        return -2;
     }
 
-    this->embedPiece(piece);
-
-    return 1;
+    return this->embedPiece(piece);
 }
 
 // attempts to rotate a piece in a specific direction
@@ -294,10 +312,40 @@ void Matrix::drawMatrix(sf::RenderWindow &window) {
     }
 }
 
+// draws the next-box *TO THE RIGHT* of the matrix
+// this includes the string "Next:" above a rectangle outline
+// which contains the image of a piece
+void Matrix::drawNextBox(sf::RenderWindow &window, pieceShape shape, sf::Text &nextText) {
+    sf::RectangleShape nextBox(sf::Vector2f((float) this->cellW * (DIM + 2), (float) this->cellH * DIM));
+    nextBox.move(sf::Vector2f((float) this->x + (float) this->width,(float) this->y));
+    nextBox.move(sf::Vector2f((float) this->cellW * 2, (float) this->cellH * 2));
+
+    nextBox.setOutlineThickness(this->matrixBorder);
+
+    nextBox.setFillColor(sf::Color::Black);
+    nextBox.setOutlineColor(sf::Color::White);
+
+    window.draw(nextBox);
+
+    nextText.setPosition(nextBox.getPosition());
+    nextText.move(sf::Vector2f(0.0f, -nextText.getLocalBounds().height));
+
+    window.draw(nextText);
+
+    for(int i = 0; i < DIM; i++) {
+        for(int j = 0; j < DIM; j++) {
+           int color = shapeMap[shape][i][j];
+
+           this->drawCell(window, MATRIXHEIGHT + DIM - i - 8, MATRIXWIDTH + 3 + j, color);
+        }
+    }
+}
+
 // draws everything on and around the matrix
 // also responsible for the "next box"
-void Matrix::draw(sf::RenderWindow &window, Piece &piece) {
+void Matrix::draw(sf::RenderWindow &window, Piece &piece, pieceShape shape, sf::Text &nextText) {
     this->drawOutline(window);
     this->drawMatrix(window);
+    this->drawNextBox(window, shape, nextText);
     this->drawPiece(window, piece);
 }

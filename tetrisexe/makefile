@@ -1,3 +1,5 @@
+# !/bin/make
+
 CPP = g++
 FLAGS = -Wall -Werror
 OBJ = main.o tetris.o matrix.o piece.o
@@ -16,9 +18,11 @@ clean:
 	rm -fv *.o $(PROGRAMNAME)
 
 run:
-	./$(PROGRAMNAME) 0 0
+	./$(PROGRAMNAME) 0 0 1
 
 rerun:
+	make cleanrerun:
 	make clean
 	make
 	make run
+	make

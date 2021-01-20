@@ -30,12 +30,13 @@ class Matrix {
 
         void moveDownRows(int);
 
-        void embedPiece(Piece&);
+        int embedPiece(Piece&);
 
         void drawCell(sf::RenderWindow&, int, int, int);
         void drawPiece(sf::RenderWindow&, Piece&);
         void drawOutline(sf::RenderWindow&);
         void drawMatrix(sf::RenderWindow&);
+        void drawNextBox(sf::RenderWindow&, pieceShape, sf::Text&);
 
     public:
         Matrix(int, int, int, int);
@@ -51,7 +52,7 @@ class Matrix {
         int dropPiece(Piece&);
         int rotatePiece(Piece&, int);
 
-        void draw(sf::RenderWindow&, Piece&);
+        void draw(sf::RenderWindow&, Piece&, pieceShape, sf::Text&);
 };
 
 #endif

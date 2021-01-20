@@ -8,6 +8,8 @@
     #define MATRIXHEIGHT 20
     #define MATRIXWIDTH 10
 
+    #define FONTSIZE 50
+
     #define HEIGHTWIDTHRATIO (float) MATRIXWIDTH/ (float) MATRIXHEIGHT
 
 #endif
