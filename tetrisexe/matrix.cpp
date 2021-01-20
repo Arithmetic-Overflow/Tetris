@@ -141,6 +141,7 @@ int Matrix::movePiece(Piece& piece, int movedir) {
 // if the piece has collided with something embed it in place
 // returns 1 if the piece has collided with something
 // returns 0 if it has successfully dropped
+// returns -1 if the drop results in game over
 int Matrix::dropPiece(Piece& piece) {
     int pieceX = piece.getX();
     int pieceY = piece.getY();

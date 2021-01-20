@@ -16,7 +16,7 @@ clean:
 	rm -fv *.o $(PROGRAMNAME)
 
 run:
-	./$(PROGRAMNAME)
+	./$(PROGRAMNAME) 0 0
 
 rerun:
 	make clean

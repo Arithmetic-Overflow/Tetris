@@ -78,37 +78,37 @@ enum pieceShape {
 const sf::Color colorkey[7][2] = {
     // I_Shape
     {
-        sf::Color(10, 65, 194), sf::Color(5, 40, 160)
+        sf::Color(10, 65, 194), sf::Color(5, 50, 170)
     },
 
     // J_Shape
     {
-        sf::Color(114, 203, 59), sf::Color(85, 180, 35)
+        sf::Color(114, 203, 59), sf::Color(100, 190, 45)
     },
 
     // L_Shape
     {
-        sf::Color(255, 213, 10), sf::Color(220, 175, 5)
+        sf::Color(255, 213, 10), sf::Color(250, 200, 7)
     },
 
     // O_Shape
     {
-        sf::Color(255, 151, 28), sf::Color(220, 120, 5)
+        sf::Color(255, 151, 28), sf::Color(240, 135, 15)
     },
 
     // S_Shape
     {
-        sf::Color(255, 50, 19), sf::Color(220, 20, 5)
+        sf::Color(255, 50, 19), sf::Color(190, 20, 5)
     },
 
     // T_Shape
     {
-        sf::Color(131, 50, 214), sf::Color(100, 45, 175)
+        sf::Color(131, 50, 214), sf::Color(115, 45, 200)
     },
 
     // Z_Shape
     {
-        sf::Color(20, 194, 188), sf::Color(5, 155, 145)
+        sf::Color(20, 194, 188), sf::Color(10, 170, 170)
     }
 };
 
