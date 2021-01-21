@@ -66,6 +66,33 @@ void drawStrings(
     window.draw(scoreText);
 }
 
+int calculateScore(int linesCleared, int lineCount) {
+    int scoreForClear;
+    switch(linesCleared) {
+        case 0 :    scoreForClear = 0;
+                    break;
+
+        case 1 :    scoreForClear = 40;
+                    break;
+
+        case 2 :    scoreForClear = 100;
+                    break;
+
+        case 3 :    scoreForClear = 300;
+                    break;
+
+        case 4 :    scoreForClear = 1200;
+                    break;
+
+        default :   scoreForClear = 1200 * linesCleared / 4;
+                    break;
+    }
+
+    scoreForClear += lineCount;
+
+    return scoreForClear;
+}
+
 int tetris(int startTime, int id, int numGames) {
 
     // setup window
@@ -251,6 +278,8 @@ int tetris(int startTime, int id, int numGames) {
                 if(linesCleared >= 0) {
                     piece = Piece((pieceShape) nextShape);
                     nextShape = rand()%NUMSHAPES;
+
+                    score += calculateScore(linesCleared, lineCount);
 
                     lineCount += linesCleared;
                 }
